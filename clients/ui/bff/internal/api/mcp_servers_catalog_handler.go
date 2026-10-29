@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -228,8 +227,6 @@ func (app *App) ClearMcpCatalogSourceStatusHandler(
 	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 
-	slog.Info("WE HAV ENETERED")
-
 	namespace, ok := ctx.Value(constants.NamespaceHeaderParameterKey).(string)
 	if !ok || namespace == "" {
 		app.badRequestResponse(w, r, fmt.Errorf("namespace is required"))
@@ -279,7 +276,7 @@ func (app *App) ClearMcpCatalogSourceStatusHandler(
 		return
 	}
 
-	// A caller cannot clear arbitrary model/agent source IDs through this route.
+	// Prevent calls on arbitrary model/agent source IDs through this route.
 	_, err = app.repositories.McpCatalogSettingsRepository.
 		GetMcpCatalogSourceConfig(ctx, kubeClient, namespace, sourceID)
 	if err != nil {

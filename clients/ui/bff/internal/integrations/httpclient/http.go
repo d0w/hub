@@ -305,8 +305,6 @@ func (c *HTTPClient) DELETE(ctx context.Context, url string) error {
 
 	logUpstreamReq(c.logger, requestId, req)
 
-	slog.Info(fullURL)
-
 	response, err := c.client.Do(req)
 	if err != nil {
 		return err
